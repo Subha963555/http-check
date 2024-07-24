@@ -16,7 +16,6 @@ app.use(cors({
   credentials: true
 }));
 
-
 app.use(bodyParser.json());
 app.use(cookieParser());
 
@@ -35,6 +34,13 @@ if (!process.env.MONGO_URI) {
 if (!process.env.CLIENT_URL) {
   console.error('Warning: CLIENT_URL environment variable is not defined. Using default http://localhost:3000');
 }
+
+const buildPath = path.join(__dirname, 'build');
+app.use(express.static(buildPath));
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(buildPath, 'index.html'));
+});
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
